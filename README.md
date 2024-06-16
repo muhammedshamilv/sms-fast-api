@@ -59,9 +59,12 @@ alembic upgrade head
 
 ### TO RUN
 
-`uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
-`
+```
+uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+```
 
 ### API Docs
 
-`http://127.0.0.1:8000/docs`
+```
+http://127.0.0.1:8000/docs
+```
