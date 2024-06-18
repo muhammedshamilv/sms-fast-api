@@ -5,21 +5,26 @@ from sqlalchemy.exc import IntegrityError
 from app.database import get_db
 from jose import jwt
 from app.settings import JWT_SECRET_KEY, JWT_ALGORITHM,ACCESS_TOKEN_EXPIRE_MINUTES,REFRESH_TOKEN_EXPIRE_DAYS
-
+from app.middleware.auth import auth_required, get_current_user
 from app.utils import authenticate_user,create_access_token
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 router = APIRouter()
 
 @router.post("/login")
 async def login(email,password):    
     user = await authenticate_user(email, password)
     if not user:
+        logger.error("user missing")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(
-        data={"sub": user.email}
+        data={"email": user.email}
     )
 
     return access_token
@@ -33,7 +38,7 @@ async def register(email,password,db: Session = Depends(get_db)):
         db.commit()
         db.refresh(user)
         access_token = create_access_token(
-            data={"sub": user.email}
+            data={"email": user.email}
         )
         return access_token
     except IntegrityError:
@@ -44,12 +49,18 @@ async def register(email,password,db: Session = Depends(get_db)):
 async def refresh_token(refresh_token: str):
     try:
         payload = jwt.decode(refresh_token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
-        email = payload.get("sub")
+        logger.debug("Payload decoded: %s", payload)
+        email = payload.get("email")
         if email is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-        new_tokens = create_access_token(data={"sub": email})
+        new_tokens = create_access_token(data={"email": email})
         return new_tokens
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired")
     except jwt.JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+@router.get("/token-test")
+@auth_required
+def token_test_endpoint(current_user: str = Depends(get_current_user)):
+    return {"message": "Token is valid", "user": current_user}
