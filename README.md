@@ -68,3 +68,19 @@ uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 http://127.0.0.1:8000/docs
 ```
+
+### TO RUN TEST
+
+```
+ python scrpt.py
+```
+
+```
+ pytest --cov=app --cov-report=html
+```
+
+now you can access the report using the below url
+
+```
+http://127.0.0.1:5500/htmlcov/z_6549c0330f733809_auth_py.html
+```

@@ -7,17 +7,12 @@ from jose import jwt
 from app.settings import JWT_SECRET_KEY, JWT_ALGORITHM
 from app.middleware.auth import auth_required, get_current_user
 from app.utils import authenticate_user,create_access_token
-from pydantic import BaseModel, EmailStr
-
+from app.models import LoginRequest
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
-
-class LoginRequest(BaseModel):
-    email: EmailStr
-    password: str
     
 @router.post("/login")
 async def login(login_data: LoginRequest):

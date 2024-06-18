@@ -4,7 +4,12 @@ import bcrypt
 from .database import Base
 from datetime import datetime
 from .settings import PSWD_SECRET_KEY
+from pydantic import BaseModel, EmailStr
 
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+    
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
