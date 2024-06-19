@@ -90,16 +90,3 @@ http://127.0.0.1:5500/htmlcov/z_6549c0330f733809_auth_py.html
 ```
 tail -f app.log
 ```
-
-### TO RUN USING DOCKER
-
-```
-bash run.sh
-```
-
-to stop container
-
-```
-docker ps
-docker stop <containerid>
-```
