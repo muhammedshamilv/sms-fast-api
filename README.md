@@ -22,7 +22,7 @@ psql
 Create a database
 
 ```
-create database culture_matters;
+create database smscampaigner;
 ```
 
 Create a user
@@ -34,7 +34,7 @@ create user username with password ‘pswd’
 Grant all privileges to user
 
 ```
-grant all privileges on database culture_matters to username;
+grant all privileges on database smscampaigner to username;
 ```
 
 Follow below instructions after setting up database.
@@ -83,4 +83,23 @@ now you can access the report using the below url
 
 ```
 http://127.0.0.1:5500/htmlcov/z_6549c0330f733809_auth_py.html
+```
+
+### TO ACCESS LOGS
+
+```
+tail -f app.log
+```
+
+### TO RUN USING DOCKER
+
+```
+bash run.sh
+```
+
+to stop container
+
+```
+docker ps
+docker stop <containerid>
 ```
