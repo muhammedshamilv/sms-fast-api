@@ -9,8 +9,9 @@ from app.middleware.auth import auth_required, get_current_user
 from app.utils import authenticate_user,create_access_token
 from app.models import LoginRequest
 import logging
-logging.basicConfig(level=logging.DEBUG)
+
 logger = logging.getLogger(__name__)
+
 
 router = APIRouter()
     
@@ -26,6 +27,7 @@ async def login(login_data: LoginRequest):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    logger.info("Login successful for email: %s", email)
     access_token = create_access_token(
         data={"email": user.email}
     )
@@ -45,6 +47,7 @@ async def register(data: LoginRequest,db: Session = Depends(get_db)):
         access_token = create_access_token(
             data={"email": user.email}
         )
+        logger.info("Register successful for email: %s", email)
         return access_token
     except IntegrityError:
         raise HTTPException(status_code=400, detail="Email already registered")
