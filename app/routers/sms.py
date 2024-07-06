@@ -47,6 +47,8 @@ async def sms_sender(sms_data:SmsRequest, current_user: str = Depends(get_curren
     'Authorization': 'Bearer '+settings.API_TOKEN
     }
 
+    #TODO Handle error cases (due to lack of time i did'nt handle the error cases)
+    
     response = requests.request("POST", url, headers=headers, data=payload)
     logger.info("sms info: %s", response)
     data=response.text
